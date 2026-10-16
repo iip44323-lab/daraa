@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html dir='rtl' lang='ar'>
+<head>
+<meta charset='UTF-8'>
+<title>Register - Daraa</title>
+<script src='https://cdn.tailwindcss.com'></script>
+<link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap' rel='stylesheet'>
+<style>* { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class='bg-slate-900 min-h-screen flex items-center justify-center p-4'>
+<div class='w-full max-w-md'>
+<div class='text-center mb-6'>
+<div class='text-6xl mb-2'>&#128737;</div>
+<h1 class='text-3xl font-black text-white'>Daraa</h1>
+</div>
+<div class='bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20'>
+<h2 class='text-2xl font-bold text-white mb-6 text-center'>Create Account</h2>
+<form id='regForm' class='space-y-4'>
+<input type='text' id='company' placeholder='Company' required class='w-full bg-white/10 text-white px-4 py-3 rounded-lg border border-white/20'>
+<input type='email' id='email' placeholder='Email' required class='w-full bg-white/10 text-white px-4 py-3 rounded-lg border border-white/20'>
+<input type='tel' id='phone' placeholder='Phone' required class='w-full bg-white/10 text-white px-4 py-3 rounded-lg border border-white/20'>
+<input type='password' id='password' placeholder='Password' required minlength='6' class='w-full bg-white/10 text-white px-4 py-3 rounded-lg border border-white/20'>
+<button type='submit' class='w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-lg'>&#128640; Register - 7 Days Free</button>
+</form>
+<div id='message' class='mt-4 text-center'></div>
+</div>
+</div>
+<script>
+document.getElementById('regForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = {
+    company: document.getElementById('company').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    password: document.getElementById('password').value
+  };
+  const msg = document.getElementById('message');
+  msg.innerHTML = '<div class="text-emerald-400">Loading...</div>';
+  try {
+    const r = await fetch('/api/register', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+    const result = await r.json();
+    if (result.success) {
+      localStorage.setItem('token', result.token);
+      msg.innerHTML = '<div class="text-emerald-400 font-bold">Success!</div>';
+      setTimeout(() => window.location.href = '/', 1500);
+    } else {
+      msg.innerHTML = '<div class="text-red-400">' + (result.detail || 'Error') + '</div>';
+    }
+  } catch(err) {
+    msg.innerHTML = '<div class="text-red-400">Connection failed</div>';
+  }
+});
+</script>
+</body>
+</html>
